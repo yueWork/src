@@ -26,4 +26,15 @@ public class ConnectDatabase {
 			e.printStackTrace();
 		}
 	}
+	void close()
+	{
+		try {
+			connection.close();
+			pst.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }
