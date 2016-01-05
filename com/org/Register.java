@@ -26,13 +26,13 @@ public class Register extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String email = request.getParameter("email");
 		String password0 = request.getParameter("password0");
-		String portail = "/Users/yue/Documents/workspace/java/BookStore/WebContent/portait/default_portait.jpg";
+		String portait = "/Users/yue/Documents/workspace/java/BookStore/WebContent/portait/default_portait.jpg";
 		String uid = UUID.randomUUID().toString().replaceAll("-", "");
 		;
 		System.out.println(uid);
 
-		String sql = "insert into use_info (uid,uname,phone,email,password,portail) values (\"" + uid + "\",\""
-				+ userName + "\",\"" + phone + "\",\"" + email + "\",\"" + password0 + "\",\"" + portail + "\");";
+		String sql = "insert into use_info (uid,uname,phone,email,password,portait) values (\"" + uid + "\",\""
+				+ userName + "\",\"" + phone + "\",\"" + email + "\",\"" + password0 + "\",\"" + portait + "\");";
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
 
