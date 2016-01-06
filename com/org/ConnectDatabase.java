@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import com.mysql.jdbc.ResultSet;
 
 public class ConnectDatabase {
-	public String url = "jdbc:mysql://localhost:3307/bookstore";
+	public String url = "jdbc:mysql://localhost:3306/bookstore";
 	public String name = "com.mysql.jdbc.Driver";
 	public String username = "root";
-	public String password = "8387110";
+	public String password = "adminzyy22339456732";
 	public java.sql.PreparedStatement pst = null;
 	public Connection connection = null;
 	public ResultSet ret = null;

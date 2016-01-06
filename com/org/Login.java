@@ -16,29 +16,7 @@ import org.apache.jasper.tagplugins.jstl.core.Out;
 import com.mysql.jdbc.ResultSet;
 
 public class Login extends HttpServlet {
-
-	// 利用cookie设置读取上次返回的时间：
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
-	response.setContentType("text/html;charset=utf-8");
-	PrintWriter out = response.getWriter();
-	out.print("您上次访问的时间是：");
-	//获取客户的cookie信息
-	Cookie[] cookies = request.getCookies();
-	for(int i=0;cookies!=null && i<cookies.length;i++){
-	if(cookies[i].getName().equals("lastAccessTime")){
-	long value = Long.parseLong(cookies[i].getValue());
-	Date date = new Date(value);
-	out.print(date.toLocaleString());
-	}
-	}
-	//把新的访问时间写给客户，保存到cookie中
-	        Cookie cookie =new Cookie("lastAccessTime",System.currentTimeMillis()+"");
-	        cookie.setMaxAge(30*24*3600);
-	        cookie.setPath("/CookieDemo");
-	response.addCookie(cookie);
-	}
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/json;charset=UTF-8");

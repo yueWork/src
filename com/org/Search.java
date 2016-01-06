@@ -34,15 +34,8 @@ public class Search extends HttpServlet {
         PrintWriter out = response.getWriter();
         String selectSubject = request.getParameter("selectSubject");
 		String search = request.getParameter("search");
-//		try
-//		{
-//			Class.forName(name); // 制定连接类型
-//			connection = DriverManager.getConnection(url, username, password);// 获取连接
-////			out.print("mysql connection is ok ya");
-//		} catch(Exception e)
-//		{
-//			e.printStackTrace();
-//		}
+		ConnectDatabase connect=new ConnectDatabase();
+		connect.connect();
 		out.print("[{\"result\":50}]");
 	}
 	
