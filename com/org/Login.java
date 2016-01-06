@@ -46,6 +46,7 @@ public class Login extends HttpServlet {
 
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		String remember_flag = request.getParameter("remember_flag");
 
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
@@ -62,21 +63,24 @@ public class Login extends HttpServlet {
 				System.out.println(password);
 				con_data.ret.close();
 				if (password.equals(psw)) {
-					// 在服务器端创建一个cookie
-					Cookie cookie_uid = new Cookie("uid", uid);
-					Cookie cookie_uname = new Cookie("uname", uname);
-					Cookie cookie_email = new Cookie("email", email);
-					Cookie cookie_password = new Cookie("password", psw);
-					// 设置cookie的存活时间,如果不设置，cookie不保存。
-					cookie_uid.setMaxAge(7 * 24 * 60 * 60);
-					cookie_uname.setMaxAge(7 * 24 * 60 * 60);
-					cookie_email.setMaxAge(7 * 24 * 60 * 60);
-					cookie_password.setMaxAge(7 * 24 * 60 * 60);
-					// 将cookie写到客户端
-					response.addCookie(cookie_uid);
-					response.addCookie(cookie_uname);
-					response.addCookie(cookie_email);
-					response.addCookie(cookie_password);
+					if(remember_flag.equals("true")){
+						System.out.println("记住密码");
+						// 在服务器端创建一个cookie
+						Cookie cookie_uid = new Cookie("uid", uid);
+						Cookie cookie_uname = new Cookie("uname", uname);
+						Cookie cookie_email = new Cookie("email", email);
+						Cookie cookie_password = new Cookie("password", psw);
+						// 设置cookie的存活时间,如果不设置，cookie不保存。
+						cookie_uid.setMaxAge(7 * 24 * 60 * 60);
+						cookie_uname.setMaxAge(7 * 24 * 60 * 60);
+						cookie_email.setMaxAge(7 * 24 * 60 * 60);
+						cookie_password.setMaxAge(7 * 24 * 60 * 60);
+						// 将cookie写到客户端
+						response.addCookie(cookie_uid);
+						response.addCookie(cookie_uname);
+						response.addCookie(cookie_email);
+						response.addCookie(cookie_password);
+					}
 					out.print("[{\"msg\":\"验证成功\"},{\"state\":\"0\"}]");
 					System.out.println("验证成功");
 				} else {
