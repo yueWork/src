@@ -16,7 +16,7 @@ import org.apache.jasper.tagplugins.jstl.core.Out;
 import com.mysql.jdbc.ResultSet;
 
 public class Login extends HttpServlet {
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/json;charset=UTF-8");
@@ -41,7 +41,7 @@ public class Login extends HttpServlet {
 				System.out.println(password);
 				con_data.ret.close();
 				if (password.equals(psw)) {
-					if(remember_flag.equals("true")){
+					if (remember_flag.equals("true")) {
 						System.out.println("记住密码");
 						// 在服务器端创建一个cookie
 						Cookie cookie_uid = new Cookie("uid", uid);
@@ -59,7 +59,8 @@ public class Login extends HttpServlet {
 						response.addCookie(cookie_email);
 						response.addCookie(cookie_password);
 					}
-					out.print("[{\"msg\":\"验证成功\"},{\"state\":\"0\"}]");
+					out.print("[{\"msg\":\"验证成功\"},{\"state\":\"0\"},{\"uid\":"+ uid +
+							"\"},{\"uname\":"+uname+"\"uname\"}]");
 					System.out.println("验证成功");
 				} else {
 					out.print("[{\"msg\":\"用户名与密码不匹配\"},{\"state\":\"1\"}]");
