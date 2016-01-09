@@ -1,5 +1,6 @@
 package com.org;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -57,11 +58,14 @@ public class UpdateUserInfo extends HttpServlet {
 			if (connect.ret.next()) {
 				String portaitPre=connect.ret.getString("portait");
 				if(!portait.equals(portaitPre)){
-					
+					String realPath1 = request.getServletContext().getRealPath("/"); 
+			        realPath1+=portaitPre;
+			        File file=new File(realPath1);
+			        if(file.isFile()&&file.exists()){
+			        	file.delete();
+			        }
 				}
 				connect.ret.close();
-			} else {
-				out.print("[{\"msg\":\"用户名不存在\"},{\"state\":\"1\"}]");
 			}
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
