@@ -86,6 +86,7 @@ public class Search extends HttpServlet {
 			}
 			con_data.ret.close();
 			con_data.pst.close();
+			con_data.close();
 			if (num != 0 ) {
 				 String result =
 				 "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + num +
@@ -103,11 +104,10 @@ public class Search extends HttpServlet {
 				System.out.println(result);
 				result = result + "]}";
 				System.out.println(result);
-				
 				out.print(result);
 			}
 			else {
-				String result = "{\"msg\":\"无符合条件书籍\",\"state\":\"0\",\"count\":\"" + num + "\"}";
+				String result = "{\"msg\":\"无符合条件书籍\",\"state\":\"1\",\"count\":\"" + num + "\"}";
 				out.print(result);
 			}
 

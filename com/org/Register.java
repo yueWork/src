@@ -26,16 +26,14 @@ public class Register extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String email = request.getParameter("email");
 		String password0 = request.getParameter("password0");
-		String portait = "/Users/yue/Documents/workspace/java/BookStore/WebContent/portait/default_portait.jpg";
+		String portait = "userImg/default_portait.jpg";
 		String uid = UUID.randomUUID().toString().replaceAll("-", "");
-		;
 		System.out.println(uid);
 
 		String sql = "insert into use_info (uid,uname,phone,email,password,portait) values (\"" + uid + "\",\""
 				+ userName + "\",\"" + phone + "\",\"" + email + "\",\"" + password0 + "\",\"" + portait + "\");";
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
-
 		try {
 			con_data.pst = con_data.connection
 					.prepareStatement("select * from use_info where email=\"" + email + "\";");// 准备执行SQL语句
