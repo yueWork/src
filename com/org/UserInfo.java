@@ -26,14 +26,14 @@ public class UserInfo extends HttpServlet {
 		ConnectDatabase connect=new ConnectDatabase();
 		connect.connect();
 		try {
-			connect.pst = connect.connection
-					.prepareStatement("select * from use_info where uid=\"" + uid + "\";");
+			connect.pst = connect.connection.prepareStatement("select * from use_info where uid=\"" + uid + "\";");
 			connect.ret = (ResultSet) connect.pst.executeQuery();
 			if (connect.ret.next()) {
 				String uname=connect.ret.getString("uname");
 				String age = connect.ret.getString("age");
 				String sex=connect.ret.getString("sex");
-				out.print("{\"age\":\""+age+"\",\"sex\":\""+sex+"\",\"uname\":\""+uname+"\"}");
+				String portait=connect.ret.getString("portait");
+				out.print("{\"age\":\""+age+"\",\"sex\":\""+sex+"\",\"uname\":\""+uname+"\",\"portait\":\""+portait+"\"}");
 				connect.ret.close();
 			} else {
 				out.print("[{\"msg\":\"用户名不存在\"},{\"state\":\"1\"}]");
