@@ -32,7 +32,7 @@ public class OrderInfo extends HttpServlet {
 		try {
 			String sql="select O.time ,B.bname ,O.oid ,B.price from bookstore.order O,bookstore.book_info B, bookstore.shop S "+
 					" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid order by O.time DESC limit "+index+",3";
-			System.out.println(sql);
+//			System.out.println(sql);
 			connect.pst = connect.connection.prepareStatement(sql);
 			connect.ret = (ResultSet) connect.pst.executeQuery();
 			String bname;
@@ -41,7 +41,7 @@ public class OrderInfo extends HttpServlet {
 			String price;
 			
 			if(!connect.ret.next()){
-				System.out.println("false");
+//				System.out.println("false");
 				out.print(0+"\",\"next\":\"0\"}");
 				
 			}else{
