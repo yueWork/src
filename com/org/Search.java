@@ -26,7 +26,7 @@ public class Search extends HttpServlet {
 
 		String search_type = request.getParameter("search_type");
 		String search_name = request.getParameter("search_name");
-		System.out.println(search_name);
+//		System.out.println(search_name);
 
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
@@ -43,13 +43,13 @@ public class Search extends HttpServlet {
 			search_type = "bid";
 		}
 		sql = "select count(*) as num from bookstore.book_info where " + search_type + "=\"" + search_name + "\";";
-		System.out.println(sql);
+//		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
 			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
 			con_data.ret.next();
 			num = con_data.ret.getInt("num");
-			System.out.println(num);
+//			System.out.println(num);
 			con_data.ret.close();
 			con_data.pst.close();
 		} catch (SQLException e1) {
@@ -59,7 +59,7 @@ public class Search extends HttpServlet {
 
 		// 返回符合条件的书籍的信息
 		sql = "select * from bookstore.book_info where " + search_type + "=\"" + search_name + "\" order by bid;";
-		System.out.println(sql);
+//		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
 			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
@@ -68,16 +68,16 @@ public class Search extends HttpServlet {
 			String bid = null, bname = null, price = null, cover = null;
 			int n = 0;
 			while (con_data.ret.next()) {
-				System.out.println("有");
+//				System.out.println("有");
 				bid = con_data.ret.getString("bid");
-				System.out.println(bid);
+//				System.out.println(bid);
 				bname = con_data.ret.getString("bname");
-				System.out.println(bname);
+//				System.out.println(bname);
 				price = con_data.ret.getString("price");
-				System.out.println(price);
+//				System.out.println(price);
 				cover = con_data.ret.getString("cover");
-				System.out.println(cover);
-				System.out.println(n);
+//				System.out.println(cover);
+//				System.out.println(n);
 				books[n] = new HashMap();
 				books[n].put("bid", bid);
 				books[n].put("bname", bname);
@@ -88,7 +88,7 @@ public class Search extends HttpServlet {
 			con_data.ret.close();
 			con_data.pst.close();
 			con_data.close();
-			System.out.println("num"+num);
+//			System.out.println("num"+num);
 			if (num != 0 ) {
 				 String result =
 				 "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + num +
@@ -99,13 +99,13 @@ public class Search extends HttpServlet {
 							+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","
 							+ "\"cover\":\"" + books[i].get("cover") + "\"},";
 				}
-				System.out.println(result);
-				System.out.println(result.length());
-				System.out.println(result.length() - 2);
+//				System.out.println(result);
+//				System.out.println(result.length());
+//				System.out.println(result.length() - 2);
 				result = result.substring(0, result.length() - 1);
-				System.out.println(result);
+//				System.out.println(result);
 				result = result + "]}";
-				System.out.println(result);
+//				System.out.println(result);
 				out.print(result);
 			}
 			else {

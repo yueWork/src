@@ -30,8 +30,10 @@ public class OrderInfo extends HttpServlet {
 		ConnectDatabase connect=new ConnectDatabase();
 		connect.connect();
 		try {
-			String sql="select O.time ,B.bname ,O.oid ,B.price from bookstore.order O,bookstore.book_info B, bookstore.shop S "+
-					" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid order by O.time DESC limit "+index+",3";
+			String sql="select O.time ,B.bname ,O.oid ,B.price,BS1.tname as children,BS2.tname as parent from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
+					+"bookstore.book_sort BS1 ,bookstore.book_sort BS2 "
+					+" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid "
+					+" and BS1.tid=B.tid and BS1._id=BS2.tid order by O.time DESC limit  "+index+",3";
 //			System.out.println(sql);
 			connect.pst = connect.connection.prepareStatement(sql);
 			connect.ret = (ResultSet) connect.pst.executeQuery();
@@ -39,7 +41,8 @@ public class OrderInfo extends HttpServlet {
 			String time;
 			String oid;
 			String price;
-			
+			String childType;
+			String parentType;
 			if(!connect.ret.next()){
 //				System.out.println("false");
 				out.print(0+"\",\"next\":\"0\"}");
@@ -50,18 +53,26 @@ public class OrderInfo extends HttpServlet {
 				time=connect.ret.getString("time");
 				oid=connect.ret.getString("oid");
 				price=connect.ret.getString("price");
-				out.print("{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\"}");
+				childType=connect.ret.getString("children");
+				parentType=connect.ret.getString("parent");
+				out.print("{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				while (connect.ret.next()) {
 					bname=connect.ret.getString("bname");
 					time=connect.ret.getString("time");
 					oid=connect.ret.getString("oid");
 					price=connect.ret.getString("price");
-					out.print(",{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\"}");
+					childType=connect.ret.getString("children");
+					parentType=connect.ret.getString("parent");
+					out.print(",{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				} 
 				out.print("],");
 				index+=3;
-				sql="select O.time ,B.bname ,O.oid ,B.price from bookstore.order O,bookstore.book_info B, bookstore.shop S "+
-						" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid order by O.time DESC limit "+index+",3";
+				sql="select O.time ,B.bname ,O.oid ,B.price,BS1.tname ,BS2.tname from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
+						+"bookstore.book_sort BS1 ,bookstore.book_sort BS2 "
+						+" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid "
+						+" and BS1.tid=B.tid and BS1._id=BS2.tid order by O.time DESC limit  "+index+",3";
+//				sql="select O.time ,B.bname ,O.oid ,B.price from bookstore.order O,bookstore.book_info B, bookstore.shop S "+
+//						" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid order by O.time DESC limit "+index+",3";
 				connect.pst = connect.connection.prepareStatement(sql);
 				connect.ret = (ResultSet) connect.pst.executeQuery();
 				if(!connect.ret.next()){

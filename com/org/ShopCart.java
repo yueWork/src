@@ -45,7 +45,7 @@ public class ShopCart extends HttpServlet {
 				con_data.pst.executeUpdate();
 				System.out.println("insert:"+sqlinsert);
 			}
-	
+			out.print("{\"result\":\"success\"}");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
