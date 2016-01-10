@@ -18,15 +18,15 @@ public class Books extends HttpServlet {
 		System.out.println("chenggonglllljinru");
 		int num = Integer.parseInt(request.getParameter("num"));
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-		System.out.println(num);
-		System.out.println(pageNum);
-		System.out.println(num / 6 + 1);
+		System.out.println("num:"+num);
+		System.out.println("Pnum:"+pageNum);
+//		System.out.println(num / 6 + 1);
 		if (pageNum <= (num / 6 + 1) && pageNum >= 0) {
 			String bids[] = new String[num];
 			for (int i = 0; i < num; i++) {
 				String temp = "bid" + i;
 				bids[i] = request.getParameter(temp);
-				System.out.println(bids[i]);
+//				System.out.println(bids[i]);
 			}
 			String sql;
 			ConnectDatabase con_data = new ConnectDatabase();
@@ -42,28 +42,28 @@ public class Books extends HttpServlet {
 				sql = sql + " or bid=" + bids[j];
 			}
 			sql = sql + ";";
-			System.out.println(sql);
+//			System.out.println(sql);
 			try {
 				con_data.pst = con_data.connection.prepareStatement(sql);
 				con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
 				HashMap<String, String>[] books = new HashMap[end-pageNum+1];
-				System.out.println("end-pageNum:"+(end-pageNum+1));
+//				System.out.println("end-pageNum:"+(end-pageNum+1));
 
 				String bid = null, bname = null, price = null, cover = null, counter = null;
 				int n = 0;
 				while (con_data.ret.next()) {
-					System.out.println("有");
+//					System.out.println("有");
 					bid = con_data.ret.getString("bid");
-					System.out.println(bid);
+//					System.out.println(bid);
 					bname = con_data.ret.getString("bname");
-					System.out.println(bname);
+//					System.out.println(bname);
 					price = con_data.ret.getString("price");
-					System.out.println(price);
+//					System.out.println(price);
 					cover = con_data.ret.getString("cover");
-					System.out.println(cover);
+//					System.out.println(cover);
 					counter = con_data.ret.getString("counter");
-					System.out.println(cover);
-					System.out.println(n);
+//					System.out.println(cover);
+//					System.out.println(n);
 					books[n] = new HashMap();
 					books[n].put("bid", bid);
 					books[n].put("bname", bname);
@@ -82,13 +82,13 @@ public class Books extends HttpServlet {
 							+ "\"cover\":\"" + books[i].get("cover") + "\"," + "\"counter\":\""
 							+ books[i].get("counter") + "\"},";
 				}
-				System.out.println(result);
-				System.out.println(result.length());
-				System.out.println(result.length() - 2);
+//				System.out.println(result);
+//				System.out.println(result.length());
+//				System.out.println(result.length() - 2);
 				result = result.substring(0, result.length() - 1);
-				System.out.println(result);
+//				System.out.println(result);
 				result = result + "]}";
-				System.out.println(result);
+//				System.out.println(result);
 
 				out.print(result);
 
