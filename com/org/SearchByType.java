@@ -21,7 +21,7 @@ public class SearchByType extends HttpServlet {
 		System.out.println(pageNum);
 		System.out.println(type);
 		int index = Integer.parseInt(pageNum);
-		index = index*6;
+		index = index * 6;
 
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
@@ -41,75 +41,86 @@ public class SearchByType extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		int start = index;
 		int num = 0;
-		sql = "select count(*) as num from book_info where tid=\"" + tid + "\" order by tid limit "+index+",6;";
+		sql = "select count(*) as num from book_info where tid=\"" + tid + "\";";
 		try {
+
 			con_data.pst = con_data.connection.prepareStatement(sql);
 			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
 			con_data.ret.next();
 			num = con_data.ret.getInt("num");
-			System.out.println(num);
+			System.out.println("num" + num);
 			con_data.ret.close();
 			con_data.pst.close();
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		// 返回符合条件的书籍的信息
-		sql = "select * from book_info where tid=\"" + tid + "\" order by tid limit "+index+",6;";
-		System.out.println(sql);
-		try {
-			con_data.pst = con_data.connection.prepareStatement(sql);
-			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
-			HashMap<String,String>[] books = new HashMap[num];
+		int end = 0;
+		if ((index * 6 + 5) > (num - 1)) {
+			end = num - 1;
+		} else
+			end = index * 6 + 5;
+		if (index <= num-1 ) {
+			// 返回符合条件的书籍的信息
+			sql = "select * from book_info where tid=\"" + tid + "\" order by tid limit " + index + ",6;";
+			System.out.println(sql);
+			System.out.println("start" + start + " end:" + end);
+			try {
+				con_data.pst = con_data.connection.prepareStatement(sql);
+				con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
+				HashMap<String, String>[] books = new HashMap[end - start + 1];
 
-			String bid = null, bname = null, price = null, cover = null;
-			int n = 0;
-			while (con_data.ret.next()) {
-				bid = con_data.ret.getString("bid");
-				bname = con_data.ret.getString("bname");
-				price = con_data.ret.getString("price");
-				cover = con_data.ret.getString("cover");
-				books[n] = new HashMap();
-				books[n].put("bid", bid);
-				books[n].put("bname", bname);
-				books[n].put("price", price);
-				books[n].put("cover", cover);
-				n++;
-			}
-			con_data.ret.close();
-			con_data.pst.close();
-			con_data.close();
-			if (num != 0 ) {
-				 String result =
-				 "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + num +
-				 "\""+ ",\"books\":[";
-				for (int i = 0; i < num; i++) {
-					result = result + "{\"bid\":\"" + books[i].get("bid") + "\"," + "\"bname\":\""
-							+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","
-							+ "\"cover\":\"" + books[i].get("cover") + "\"},";
+				String bid = null, bname = null, price = null, cover = null;
+				int n = 0;
+				while (con_data.ret.next()) {
+					bid = con_data.ret.getString("bid");
+					bname = con_data.ret.getString("bname");
+					price = con_data.ret.getString("price");
+					cover = con_data.ret.getString("cover");
+					books[n] = new HashMap();
+					books[n].put("bid", bid);
+					books[n].put("bname", bname);
+					books[n].put("price", price);
+					books[n].put("cover", cover);
+					n++;
 				}
-				System.out.println(result);
-				System.out.println(result.length());
-				System.out.println(result.length() - 2);
-				result = result.substring(0, result.length() - 1);
-				System.out.println(result);
-				result = result + "]}";
-				System.out.println(result);
-				out.print(result);
-			}
-			else {
-				String result = "{\"msg\":\"无符合条件书籍\",\"state\":\"1\",\"count\":\"" + num + "\"}";
+				con_data.ret.close();
+				con_data.pst.close();
+				con_data.close();
+				if (num != 0) {
+					String result = "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + (end - start + 1) + "\""
+							+ ",\"books\":[";
+					for (int i = 0; i < (end - start + 1); i++) {
+						result = result + "{\"bid\":\"" + books[i].get("bid") + "\"," + "\"bname\":\""
+								+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","
+								+ "\"cover\":\"" + books[i].get("cover") + "\"},";
+					}
+					System.out.println(result);
+					System.out.println(result.length());
+					System.out.println(result.length() - 2);
+					result = result.substring(0, result.length() - 1);
+					System.out.println(result);
+					result = result + "]}";
+					System.out.println(result);
+					out.print(result);
+				} else {
+					String result = "{\"msg\":\"无符合条件书籍\",\"state\":\"1\",\"count\":\"" + num + "\"}";
+					out.print(result);
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				String result = "{\"msg\":\"查询失败\",\"state\":\"1\"}";
 				out.print(result);
 			}
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+		}else {
 			String result = "{\"msg\":\"查询失败\",\"state\":\"1\"}";
 			out.print(result);
 		}
-
 	}
 
 }
