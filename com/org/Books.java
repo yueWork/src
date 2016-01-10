@@ -34,36 +34,34 @@ public class Books extends HttpServlet {
 			int start = pageNum*6;
 			sql = "select * from book_info where bid=" + bids[start];
 			int end = 0;
-			if((pageNum+5) > num){
-				end = num;
+			if((pageNum*6+5) > (num-1)){
+				end = num-1;
 			}else
 				end = pageNum*6+5;
-			for (int j = start+1; j < end; j++) {
+			System.out.println("start:"+start+"end:"+end);
+			for (int j = start+1; j <= end; j++) {
 				sql = sql + " or bid=" + bids[j];
 			}
+			System.out.println("start:"+start+" end:"+end);
 			sql = sql + ";";
 //			System.out.println(sql);
 			try {
 				con_data.pst = con_data.connection.prepareStatement(sql);
 				con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
-				HashMap<String, String>[] books = new HashMap[end-pageNum+1];
-//				System.out.println("end-pageNum:"+(end-pageNum+1));
+
+				HashMap<String, String>[] books = new HashMap[end-start+1];
+				System.out.println("end-pageNum:"+(end-start+1));
+
 
 				String bid = null, bname = null, price = null, cover = null, counter = null;
 				int n = 0;
 				while (con_data.ret.next()) {
-//					System.out.println("有");
+
 					bid = con_data.ret.getString("bid");
-//					System.out.println(bid);
 					bname = con_data.ret.getString("bname");
-//					System.out.println(bname);
 					price = con_data.ret.getString("price");
-//					System.out.println(price);
 					cover = con_data.ret.getString("cover");
-//					System.out.println(cover);
 					counter = con_data.ret.getString("counter");
-//					System.out.println(cover);
-//					System.out.println(n);
 					books[n] = new HashMap();
 					books[n].put("bid", bid);
 					books[n].put("bname", bname);
@@ -76,7 +74,7 @@ public class Books extends HttpServlet {
 				con_data.pst.close();
 				String result = "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + (end-start+1) + "\"" + ",\"books\":[";
 				// String result = "{\"books\":[";
-				for (int i = 0; i < (end-pageNum); i++) {
+				for (int i = 0; i < (end-start+1); i++) {
 					result = result + "{\"bid\":\"" + books[i].get("bid") + "\"," + "\"bname\":\""
 							+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","
 							+ "\"cover\":\"" + books[i].get("cover") + "\"," + "\"counter\":\""

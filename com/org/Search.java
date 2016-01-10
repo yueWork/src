@@ -58,7 +58,7 @@ public class Search extends HttpServlet {
 		}
 
 		// 返回符合条件的书籍的信息
-		sql = "select * from bookstore.book_info where " + search_type + "=\"" + search_name + "\";";
+		sql = "select * from bookstore.book_info where " + search_type + "=\"" + search_name + "\" order by bid;";
 		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
