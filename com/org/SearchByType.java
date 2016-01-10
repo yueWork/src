@@ -16,8 +16,12 @@ public class SearchByType extends HttpServlet {
 		response.setContentType("text/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 
+		String pageNum = request.getParameter("pageNum");
 		String type = request.getParameter("type");
+		System.out.println(pageNum);
 		System.out.println(type);
+		int index = Integer.parseInt(pageNum);
+		index = index*6;
 
 		ConnectDatabase con_data = new ConnectDatabase();
 		con_data.connect();
@@ -38,7 +42,7 @@ public class SearchByType extends HttpServlet {
 			e1.printStackTrace();
 		}
 		int num = 0;
-		sql = "select count(*) as num from book_info where tid=\"" + tid + "\";";
+		sql = "select count(*) as num from book_info where tid=\"" + tid + "\" order by tid limit "+index+",6;";
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
 			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
@@ -47,13 +51,12 @@ public class SearchByType extends HttpServlet {
 			System.out.println(num);
 			con_data.ret.close();
 			con_data.pst.close();
-		} catch (SQLException e1) {
+		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e2.printStackTrace();
 		}
-
 		// 返回符合条件的书籍的信息
-		sql = "select * from book_info where tid=\"" + tid + "\";";
+		sql = "select * from book_info where tid=\"" + tid + "\" order by tid limit "+index+",6;";
 		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
@@ -63,16 +66,10 @@ public class SearchByType extends HttpServlet {
 			String bid = null, bname = null, price = null, cover = null;
 			int n = 0;
 			while (con_data.ret.next()) {
-				System.out.println("有");
 				bid = con_data.ret.getString("bid");
-				System.out.println(bid);
 				bname = con_data.ret.getString("bname");
-				System.out.println(bname);
 				price = con_data.ret.getString("price");
-				System.out.println(price);
 				cover = con_data.ret.getString("cover");
-				System.out.println(cover);
-				System.out.println(n);
 				books[n] = new HashMap();
 				books[n].put("bid", bid);
 				books[n].put("bname", bname);
@@ -87,7 +84,6 @@ public class SearchByType extends HttpServlet {
 				 String result =
 				 "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + num +
 				 "\""+ ",\"books\":[";
-//				String result = "{\"books\":[";
 				for (int i = 0; i < num; i++) {
 					result = result + "{\"bid\":\"" + books[i].get("bid") + "\"," + "\"bname\":\""
 							+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","

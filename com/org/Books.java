@@ -15,18 +15,15 @@ public class Books extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("chenggonglllljinru");
 		int num = Integer.parseInt(request.getParameter("num"));
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-		System.out.println("num:"+num);
-		System.out.println("Pnum:"+pageNum);
-//		System.out.println(num / 6 + 1);
+
 		if (pageNum <= (num / 6 + 1) && pageNum >= 0) {
 			String bids[] = new String[num];
 			for (int i = 0; i < num; i++) {
 				String temp = "bid" + i;
 				bids[i] = request.getParameter(temp);
-//				System.out.println(bids[i]);
+
 			}
 			String sql;
 			ConnectDatabase con_data = new ConnectDatabase();
@@ -38,19 +35,15 @@ public class Books extends HttpServlet {
 				end = num-1;
 			}else
 				end = pageNum*6+5;
-			System.out.println("start:"+start+"end:"+end);
 			for (int j = start+1; j <= end; j++) {
 				sql = sql + " or bid=" + bids[j];
 			}
-			System.out.println("start:"+start+" end:"+end);
 			sql = sql + ";";
-//			System.out.println(sql);
 			try {
 				con_data.pst = con_data.connection.prepareStatement(sql);
 				con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
 
 				HashMap<String, String>[] books = new HashMap[end-start+1];
-				System.out.println("end-pageNum:"+(end-start+1));
 
 
 				String bid = null, bname = null, price = null, cover = null, counter = null;
@@ -73,20 +66,14 @@ public class Books extends HttpServlet {
 				con_data.ret.close();
 				con_data.pst.close();
 				String result = "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + (end-start+1) + "\"" + ",\"books\":[";
-				// String result = "{\"books\":[";
 				for (int i = 0; i < (end-start+1); i++) {
 					result = result + "{\"bid\":\"" + books[i].get("bid") + "\"," + "\"bname\":\""
 							+ books[i].get("bname") + "\"," + "\"price\":\"" + books[i].get("price") + "\","
 							+ "\"cover\":\"" + books[i].get("cover") + "\"," + "\"counter\":\""
 							+ books[i].get("counter") + "\"},";
 				}
-//				System.out.println(result);
-//				System.out.println(result.length());
-//				System.out.println(result.length() - 2);
 				result = result.substring(0, result.length() - 1);
-//				System.out.println(result);
 				result = result + "]}";
-//				System.out.println(result);
 
 				out.print(result);
 
