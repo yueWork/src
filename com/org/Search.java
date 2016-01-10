@@ -19,7 +19,7 @@ import com.sun.javafx.collections.MappingChange.Map;
 
 public class Search extends HttpServlet {
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
@@ -42,7 +42,8 @@ public class Search extends HttpServlet {
 		}else if (search_type.equals("书籍编号")) {
 			search_type = "bid";
 		}
-		sql = "select count(*) as num from book_info where " + search_type + "=\"" + search_name + "\";";
+		sql = "select count(*) as num from bookstore.book_info where " + search_type + "=\"" + search_name + "\";";
+		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
 			con_data.ret = (com.mysql.jdbc.ResultSet) con_data.pst.executeQuery();
@@ -57,7 +58,7 @@ public class Search extends HttpServlet {
 		}
 
 		// 返回符合条件的书籍的信息
-		sql = "select * from book_info where " + search_type + "=\"" + search_name + "\";";
+		sql = "select * from bookstore.book_info where " + search_type + "=\"" + search_name + "\";";
 		System.out.println(sql);
 		try {
 			con_data.pst = con_data.connection.prepareStatement(sql);
@@ -87,6 +88,7 @@ public class Search extends HttpServlet {
 			con_data.ret.close();
 			con_data.pst.close();
 			con_data.close();
+			System.out.println("num"+num);
 			if (num != 0 ) {
 				 String result =
 				 "{\"msg\":\"查询成功\",\"state\":\"0\",\"count\":\"" + num +
