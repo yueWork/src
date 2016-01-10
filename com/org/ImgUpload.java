@@ -57,6 +57,7 @@ public class ImgUpload extends HttpServlet {
 	                System.out.println("filename"+fileName);  
 	                //设置保存文件路径  
 	                String realPath1 = request.getServletContext().getRealPath("/userImg"); 
+	                System.out.println(realPath1);
 	                File test=new File(realPath1);
 	                if(!test.exists()&&!test.isDirectory()){
 	                	test.mkdir();

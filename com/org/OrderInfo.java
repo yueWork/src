@@ -30,7 +30,7 @@ public class OrderInfo extends HttpServlet {
 		ConnectDatabase connect=new ConnectDatabase();
 		connect.connect();
 		try {
-			String sql="select O.time ,B.bname ,O.oid ,B.price,BS1.tname as children,BS2.tname as parent from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
+			String sql="select O.time ,B.bname,B.cover ,O.oid ,B.price,BS1.tname as children,BS2.tname as parent from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
 					+"bookstore.book_sort BS1 ,bookstore.book_sort BS2 "
 					+" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid "
 					+" and BS1.tid=B.tid and BS1._id=BS2.tid order by O.time DESC limit  "+index+",3";
@@ -39,6 +39,7 @@ public class OrderInfo extends HttpServlet {
 			connect.ret = (ResultSet) connect.pst.executeQuery();
 			String bname;
 			String time;
+			String cover;
 			String oid;
 			String price;
 			String childType;
@@ -50,24 +51,26 @@ public class OrderInfo extends HttpServlet {
 			}else{
 				out.print(1+"\",\"result\":[");
 				bname=connect.ret.getString("bname");
+				cover=connect.ret.getString("cover");
 				time=connect.ret.getString("time");
 				oid=connect.ret.getString("oid");
 				price=connect.ret.getString("price");
 				childType=connect.ret.getString("children");
 				parentType=connect.ret.getString("parent");
-				out.print("{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
+				out.print("{\"bname\":\""+bname+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				while (connect.ret.next()) {
 					bname=connect.ret.getString("bname");
+					cover=connect.ret.getString("cover");
 					time=connect.ret.getString("time");
 					oid=connect.ret.getString("oid");
 					price=connect.ret.getString("price");
 					childType=connect.ret.getString("children");
 					parentType=connect.ret.getString("parent");
-					out.print(",{\"bname\":\""+bname+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
+					out.print(",{\"bname\":\""+bname+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				} 
 				out.print("],");
 				index+=3;
-				sql="select O.time ,B.bname ,O.oid ,B.price,BS1.tname ,BS2.tname from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
+				sql="select O.time ,B.bname ,B.cover ,O.oid ,B.price,BS1.tname ,BS2.tname from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
 						+"bookstore.book_sort BS1 ,bookstore.book_sort BS2 "
 						+" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid "
 						+" and BS1.tid=B.tid and BS1._id=BS2.tid order by O.time DESC limit  "+index+",3";
