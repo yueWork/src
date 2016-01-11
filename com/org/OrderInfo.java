@@ -30,7 +30,7 @@ public class OrderInfo extends HttpServlet {
 		ConnectDatabase connect=new ConnectDatabase();
 		connect.connect();
 		try {
-			String sql="select O.time ,B.bname,B.cover ,O.oid ,B.price,BS1.tname as children,BS2.tname as parent from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
+			String sql="select O.time ,S.counter,B.bname,B.cover ,O.oid ,B.price,BS1.tname as children,BS2.tname as parent from bookstore.order O,bookstore.book_info B, bookstore.shop S,"
 					+"bookstore.book_sort BS1 ,bookstore.book_sort BS2 "
 					+" where uid='"+uid+"' and O.oid=S.oid and S.bid=B.bid "
 					+" and BS1.tid=B.tid and BS1._id=BS2.tid order by O.time DESC limit  "+index+",3";
@@ -44,6 +44,7 @@ public class OrderInfo extends HttpServlet {
 			String price;
 			String childType;
 			String parentType;
+			String counter;
 			if(!connect.ret.next()){
 //				System.out.println("false");
 				out.print(0+"\",\"next\":\"0\"}");
@@ -57,7 +58,8 @@ public class OrderInfo extends HttpServlet {
 				price=connect.ret.getString("price");
 				childType=connect.ret.getString("children");
 				parentType=connect.ret.getString("parent");
-				out.print("{\"bname\":\""+bname+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
+				counter=connect.ret.getString("counter");
+				out.print("{\"bname\":\""+bname+"\",\"counter\":\""+counter+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				while (connect.ret.next()) {
 					bname=connect.ret.getString("bname");
 					cover=connect.ret.getString("cover");
@@ -66,7 +68,8 @@ public class OrderInfo extends HttpServlet {
 					price=connect.ret.getString("price");
 					childType=connect.ret.getString("children");
 					parentType=connect.ret.getString("parent");
-					out.print(",{\"bname\":\""+bname+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
+					counter=connect.ret.getString("counter");
+					out.print(",{\"bname\":\""+bname+"\",\"counter\":\""+counter+"\",\"cover\":\""+cover+"\",\"time\":\""+time+"\",\"oid\":\""+oid+"\",\"price\":\""+price+"\",\"children\":\""+childType+"\",\"parent\":\""+parentType+"\"}");
 				} 
 				out.print("],");
 				index+=3;
