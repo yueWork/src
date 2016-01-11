@@ -51,6 +51,10 @@ public class checkShopCart extends HttpServlet {
 					connect.pst=connect.connection.prepareStatement(sqlupdate);
 					connect.pst.executeUpdate();
 					
+					sqlupdate="insert into bookstore.shop values( '"+oid+"','"+bid+"','"+number+"')";
+					connect.pst=connect.connection.prepareStatement(sqlupdate);
+					connect.pst.executeUpdate();
+					
 					System.out.println(sqlupdate);
 				}
 				else{
@@ -61,6 +65,10 @@ public class checkShopCart extends HttpServlet {
 					connect.pst.execute();
 					
 					sqldelete="insert into bookstore.order values( '"+oid+"','"+uid+"','1','"+date+"')";
+					connect.pst=connect.connection.prepareStatement(sqldelete);
+					connect.pst.execute();
+					
+					sqldelete="insert into bookstore.shop values( '"+oid+"','"+bid+"','"+number+"')";
 					connect.pst=connect.connection.prepareStatement(sqldelete);
 					connect.pst.execute();
 					
